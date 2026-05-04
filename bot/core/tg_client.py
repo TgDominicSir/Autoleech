@@ -18,7 +18,7 @@ class TgClient:
     BNAME = ""
     ID = 0
     IS_PREMIUM_USER = False
-    MAX_SPLIT_SIZE = 2097152000
+    MAX_SPLIT_SIZE = 2096103424
 
     @classmethod
     def wztgClient(cls, *args, **kwargs):
@@ -28,7 +28,7 @@ class TgClient:
         kwargs["parse_mode"] = enums.ParseMode.HTML
         kwargs["in_memory"] = True
         for param, value in {
-            "max_concurrent_transmissions": 100,
+            "max_concurrent_transmissions": 8,
             "skip_updates": False,
         }.items():
             if param in signature(Client.__init__).parameters:
@@ -90,7 +90,7 @@ class TgClient:
                 await cls.user.start()
                 cls.IS_PREMIUM_USER = cls.user.me.is_premium
                 if cls.IS_PREMIUM_USER:
-                    cls.MAX_SPLIT_SIZE = 4194304000
+                    cls.MAX_SPLIT_SIZE = 4193255424
                 uname = cls.user.me.username or cls.user.me.first_name
                 LOGGER.info(f"WZ User : [{uname}] Started!")
             except Exception as e:

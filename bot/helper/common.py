@@ -510,8 +510,9 @@ class TaskConfig:
                 and "EQUAL_SPLITS" not in self.user_dict
             )
             self.max_split_size = (
-                TgClient.MAX_SPLIT_SIZE if self.user_transmission else 2097152000
+                TgClient.MAX_SPLIT_SIZE if self.user_transmission else 2096103424
             )
+            self.split_size = (self.split_size // 1048576) * 1048576
             self.split_size = min(self.split_size, self.max_split_size)
 
             if not self.as_doc:
@@ -1138,7 +1139,7 @@ class TaskConfig:
                     self.subname = file_
                 parts = -(-f_size // self.split_size)
                 if self.equal_splits:
-                    split_size = (f_size // parts) + (f_size % parts)
+                    split_size = -(-(f_size // parts) // 1048576) * 1048576
                 else:
                     split_size = self.split_size
                 if not self.as_doc and (await get_document_type(f_path))[0]:

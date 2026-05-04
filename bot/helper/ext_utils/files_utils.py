@@ -402,7 +402,7 @@ class SevenZ:
         size = await get_path_size(dl_path)
         if self._listener.equal_splits:
             parts = -(-size // self._listener.split_size)
-            split_size = (size // parts) + (size % parts)
+            split_size = -(-(size // parts) // 1048576) * 1048576
         else:
             split_size = self._listener.split_size
         cmd = [
