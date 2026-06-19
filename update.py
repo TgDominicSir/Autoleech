@@ -66,8 +66,11 @@ if DATABASE_URL is not None:
 
 UPGRADE_PACKAGES = environ.get("UPGRADE_PACKAGES", "False")
 if UPGRADE_PACKAGES.lower() == "true":
-    packages = [dist.metadata["Name"] for dist in distributions()]
-    scall("uv pip install --system " + " ".join(packages), shell=True)
+    log_info("Updating all the Packages...")
+    if scall("uv pip install --system -r requirements.txt", shell=True) == 0:
+        log_info("Successfully Updated all the Packages !")
+    else:
+        log_error("Failed to Update all the Packages !")
 
 UPSTREAM_REPO = environ.get("UPSTREAM_REPO", "")
 if len(UPSTREAM_REPO) == 0:
@@ -99,6 +102,9 @@ if UPSTREAM_REPO is not None:
     UPSTREAM_REPO = f"https://github.com/{repo[-2]}/{repo[-1]}"
     if update.returncode == 0:
         log_info("Successfully updated with latest commits !!")
+        if ospath.exists("requirements.txt"):
+            log_info("Installing/Updating requirements from the latest commits...")
+            scall("uv pip install --system -r requirements.txt", shell=True)
     else:
         log_error("Something went Wrong ! Retry or Ask Support !")
     log_info(f"UPSTREAM_REPO: {UPSTREAM_REPO} | UPSTREAM_BRANCH: {UPSTREAM_BRANCH}")
